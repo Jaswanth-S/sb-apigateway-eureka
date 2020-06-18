@@ -1,0 +1,49 @@
+#Define a deployment named `quotationclient-deployment` by using the image pushed to Docker Hub
+#and the container port should be 8082.
+#access the url defined in ConfigMap and name it as API_URL
+#API_URL is used in properties.yml of quotation-client-service to fetch data from quotation-service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quotationclient-deployment
+  labels:
+    k8.stackroute: quotationclient-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      k8.stackroute: quotationclient-deployment
+  template:
+    metadata:
+      labels:
+        k8.stackroute: quotationclient-deployment
+    spec:
+      containers:
+        - name: quotation-client-service
+          image: jaswanth1234/quotation-client-service:1.0
+          env:
+            - name: API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: sb-config
+                  key: quotation_url
+          ports:
+            - containerPort: 8081
+---
+#Define a service named `quotationclient-svc` of type LoadBalancer and use the above created deployment as selector
+apiVersion: v1
+kind: Service
+metadata:
+  name: quotationclient-svc
+  labels:
+    k8.stackroute: quotationclient-svc
+spec:
+  type: LoadBalancer
+  selector:
+    k8.stackroute: quotationclient-deployment
+  ports:
+    - protocol: TCP
+      port: 8082
+      targetPort: 8082
+
+

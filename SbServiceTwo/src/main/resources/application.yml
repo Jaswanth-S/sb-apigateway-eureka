@@ -1,0 +1,15 @@
+# application name should be "sbservice-one"
+server:
+   port: 8082
+spring:
+  application:
+    name: sbservice-two
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+
+app:
+  message: Hello !!! Message from SpringBoot Service Two !!!

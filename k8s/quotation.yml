@@ -1,0 +1,41 @@
+#Define a deployment named `quotation-deployment` by using the image pushed to Docker Hub
+#and the container port should be 8081.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quotation-service
+  labels:
+    k8.stackroute: quotation-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8.stackroute: quotation-deployment
+  template:
+    metadata:
+      labels:
+        k8.stackroute: quotation-deployment
+    spec:
+      containers:
+        - name: quotation-service
+          image: meghnanvt/quotation-service
+          ports:
+            - containerPort: 8081
+---
+#Define a service named `quotation-svc` of type LoadBalancer and use the above created deployment as selector
+apiVersion: v1
+kind: Service
+metadata:
+  name: quotation-svc
+  labels:
+    k8.stackroute: quotation-svc
+spec:
+  type: LoadBalancer
+  selector:
+    k8.stackroute: quotation-deployment
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081
+
+

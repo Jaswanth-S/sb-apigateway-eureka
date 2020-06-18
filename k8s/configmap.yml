@@ -1,0 +1,9 @@
+#create ConfigMap with key and value, which has to be accessed while deploying SpringBoot application
+#Create ConfigMap with key and value, name key as quotation-url and value being the web-api(<external-ip-of-quotation-service>:<port>/api/v1/quotation) URL to consume data from quotation-service.
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sb-config
+data:
+  quotation_url: "http://ac0d3c5d49464445993c2ea76f3ef8ba-1339384794.us-east-1.elb.amazonaws.com:8081/api/v1/quotation"
